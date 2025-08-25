@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\InventorySyncController;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Route;
 use App\Model\User;
@@ -52,6 +53,10 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::post('application/store', 'InventoryController@store')->name('inventory.application.store');
         Route::put('application/update', 'InventoryController@update')->name('inventory.application.update');
         Route::delete('application/destroy', 'InventoryController@destroy')->name('inventory.application.destroy');
+
+        // Inventory sync routes
+        Route::post('sync', [InventorySyncController::class, 'sync'])->name('inventory.sync');
+        Route::get('sync/status', [InventorySyncController::class, 'status'])->name('inventory.sync.status');
 
         Route::get('hardware', 'HardwareController@index')->name('inventory.hardware.index');
         Route::get('hardware/fetch', 'HardwareController@fetch')->name('inventory.hardware.fetch');

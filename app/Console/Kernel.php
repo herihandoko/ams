@@ -25,6 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        
+        // Sync inventory data every hour
+        $schedule->command('inventory:sync')->hourly();
     }
 
     /**

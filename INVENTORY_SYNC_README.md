@@ -24,7 +24,14 @@ Service ini melakukan sinkronisasi berdasarkan aturan berikut:
 
 2. **Update URL**: Jika URL di database tidak sesuai dengan domain di API, maka URL akan diupdate
 
-3. **Mark Inactive**: Jika data di database tidak ada di API, maka status akan diubah menjadi "inactive" (lowercase)
+3. **Create New Records**: Jika data di API tidak ada di database, maka akan dibuat record baru dengan:
+   - Code: `API_[domain_name]`
+   - Name: domain name
+   - URL: domain
+   - Status: sesuai API (active/inactive)
+   - Server: otomatis dibuat jika IP belum ada
+
+4. **Mark Inactive**: Jika data di database tidak ada di API, maka status akan diubah menjadi "inactive" (lowercase)
 
 ## Penggunaan
 
@@ -83,6 +90,8 @@ Untuk mengaktifkan cronjob, pastikan cron job Laravel sudah berjalan:
 - **IP Address**: Mapped ke tabel `servers.ip`
 - **Domain**: Mapped ke tabel `inventories.url`
 - **Status**: Mapped ke tabel `inventories.status`
+- **Sync Source**: Mapped ke tabel `inventories.sync_source` (`api` atau `local`)
+- **Last Sync**: Mapped ke tabel `inventories.last_sync_at`
 
 ## Logging
 
@@ -91,10 +100,11 @@ Semua aktivitas sinkronisasi akan dicatat di log Laravel. Cek log di:
 
 **Contoh log output:**
 ```
-[2025-08-26 05:06:43] local.INFO: Updated inventory ID 144 with changes: {"status":"active"}
-[2025-08-26 05:06:43] local.INFO: Updated inventory ID 159 with changes: {"status":"inactive"}
-[2025-08-26 05:06:43] local.INFO: Marked inventory ID 2 as inactive (not found in API)
-[2025-08-26 05:06:43] local.INFO: Inventory sync process completed successfully
+[2025-08-26 05:17:13] local.INFO: Updated inventory ID 400 with changes: {"status":"active","url":"sipanganten.bantenprov.go.id"}
+[2025-08-26 05:17:13] local.INFO: Created new server record ID 55 for IP: 104.21.18.32
+[2025-08-26 05:17:13] local.INFO: Created new inventory record ID 440 for domain: reservasirsudbanten.bantenprov.go.id
+[2025-08-26 05:17:13] local.INFO: Marked inventory ID 2 as inactive (not found in API)
+[2025-08-26 05:17:13] local.INFO: Inventory sync process completed successfully
 ```
 
 ## Testing
@@ -123,6 +133,7 @@ Service ini sudah diuji dan berfungsi dengan baik:
 4. `app/Console/Kernel.php` - Schedule configuration
 5. `app/Inventory.php` - Added server relationship dan fillable properties
 6. `routes/web.php` - Added sync routes
+7. `database/migrations/2025_08_26_053629_add_sync_source_to_inventories_table.php` - Migration untuk sync_source
 
 ## Status Implementasi
 
@@ -132,4 +143,6 @@ Service ini sudah diuji dan berfungsi dengan baik:
 - ✅ Cronjob dikonfigurasi (setiap jam)
 - ✅ Logging berfungsi
 - ✅ Error handling lengkap
+- ✅ Sync source flag ditambahkan (`api`/`local`)
+- ✅ Last sync timestamp tracking
 - ✅ Dokumentasi lengkap

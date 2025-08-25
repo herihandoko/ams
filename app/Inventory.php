@@ -32,7 +32,9 @@ class Inventory extends Model
         'server_id',
         'type_hosting',
         'predecessor_app',
-        'sub_unit'
+        'sub_unit',
+        'sync_source',
+        'last_sync_at'
     ];
 
     public function category(): HasOne

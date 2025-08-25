@@ -10,6 +10,16 @@ class Servers extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'ip',
+        'type',
+        'id_hardware',
+        'hdd',
+        'ram',
+        'cpu',
+        'service'
+    ];
+
     public function hardware(): HasOne
     {
         return $this->hasOne(Hardware::class, 'id', 'id_hardware');

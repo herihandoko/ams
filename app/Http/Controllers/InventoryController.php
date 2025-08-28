@@ -411,6 +411,7 @@ class InventoryController extends Controller
     {
         $draw = $request->get('draw');
         $start = $request->get("start");
+        $opdId = $request->get("opd_id");
         $rowperpage = $request->get("length");
 
         $columnIndex_arr = $request->get('order');
@@ -438,6 +439,10 @@ class InventoryController extends Controller
                     ->orWhere('url', 'like', '%' . $searchValue . '%')
                     ->orWhere('ip_address', 'like', '%' . $searchValue . '%');
             });
+
+        if ($opdId) {
+            $query->where('opd_id', $opdId);
+        }
 
         if ($searchValue) {
             $query->orWhereHas('opd', function ($q) use ($searchValue) {

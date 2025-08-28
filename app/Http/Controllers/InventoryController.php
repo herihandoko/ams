@@ -412,6 +412,7 @@ class InventoryController extends Controller
         $draw = $request->get('draw');
         $start = $request->get("start");
         $opdId = $request->get("opd_id");
+        $status = $request->get("status");
         $rowperpage = $request->get("length");
 
         $columnIndex_arr = $request->get('order');
@@ -442,6 +443,14 @@ class InventoryController extends Controller
 
         if ($opdId) {
             $query->where('opd_id', $opdId);
+        }
+
+        if ($status) {
+            if ($status == 'active') {
+                $query->where('status', 'active');
+            } else {
+                $query->where('status', 'inactive');
+            }
         }
 
         if ($searchValue) {

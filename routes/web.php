@@ -6,6 +6,9 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\DataMetadataController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\MetadataSpbeController;
+use App\Http\Controllers\GovernmentCloudController;
+use App\Http\Controllers\SoftwarePlatformController;
+use App\Http\Controllers\StorageMediaController;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Route;
 use App\Model\User;
@@ -153,6 +156,33 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::get('metadata_spbe/{metadataSpbe}/edit', [MetadataSpbeController::class, 'edit'])->name('master.metadata_spbe.edit');
         Route::put('metadata_spbe/{metadataSpbe}', [MetadataSpbeController::class, 'update'])->name('master.metadata_spbe.update');
         Route::delete('metadata_spbe/{metadataSpbe}', [MetadataSpbeController::class, 'destroy'])->name('master.metadata_spbe.destroy');
+        
+        // Master Government Cloud
+        Route::get('government_cloud', [GovernmentCloudController::class, 'index'])->name('master.government_cloud.index');
+        Route::get('government_cloud/create', [GovernmentCloudController::class, 'create'])->name('master.government_cloud.create');
+        Route::post('government_cloud', [GovernmentCloudController::class, 'store'])->name('master.government_cloud.store');
+        Route::get('government_cloud/{governmentCloud}', [GovernmentCloudController::class, 'show'])->name('master.government_cloud.show');
+        Route::get('government_cloud/{governmentCloud}/edit', [GovernmentCloudController::class, 'edit'])->name('master.government_cloud.edit');
+        Route::put('government_cloud/{governmentCloud}', [GovernmentCloudController::class, 'update'])->name('master.government_cloud.update');
+        Route::delete('government_cloud/{governmentCloud}', [GovernmentCloudController::class, 'destroy'])->name('master.government_cloud.destroy');
+        
+        // Master Software Platform
+        Route::get('software_platform', [SoftwarePlatformController::class, 'index'])->name('master.software_platform.index');
+        Route::get('software_platform/create', [SoftwarePlatformController::class, 'create'])->name('master.software_platform.create');
+        Route::post('software_platform', [SoftwarePlatformController::class, 'store'])->name('master.software_platform.store');
+        Route::get('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'show'])->name('master.software_platform.show');
+        Route::get('software_platform/{softwarePlatform}/edit', [SoftwarePlatformController::class, 'edit'])->name('master.software_platform.edit');
+        Route::put('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'update'])->name('master.software_platform.update');
+        Route::delete('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'destroy'])->name('master.software_platform.destroy');
+        
+        // Master Storage Media
+        Route::get('storage_media', [StorageMediaController::class, 'index'])->name('master.storage_media.index');
+        Route::get('storage_media/create', [StorageMediaController::class, 'create'])->name('master.storage_media.create');
+        Route::post('storage_media', [StorageMediaController::class, 'store'])->name('master.storage_media.store');
+        Route::get('storage_media/{storageMedia}', [StorageMediaController::class, 'show'])->name('master.storage_media.show');
+        Route::get('storage_media/{storageMedia}/edit', [StorageMediaController::class, 'edit'])->name('master.storage_media.edit');
+        Route::put('storage_media/{storageMedia}', [StorageMediaController::class, 'update'])->name('master.storage_media.update');
+        Route::delete('storage_media/{storageMedia}', [StorageMediaController::class, 'destroy'])->name('master.storage_media.destroy');
     });
 
     Route::group(['prefix' => 'settings'], function () {

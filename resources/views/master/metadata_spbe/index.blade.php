@@ -63,16 +63,16 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('master.metadata_spbe.show', $metadata->id) }}" class="btn btn-info btn-sm">
+                                            <a href="{{ route('master.metadata_spbe.show', $metadata->id) }}" class="btn btn-xs btn-info">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('master.metadata_spbe.edit', $metadata->id) }}" class="btn btn-warning btn-sm">
+                                            <a href="{{ route('master.metadata_spbe.edit', $metadata->id) }}" class="btn btn-xs btn-warning">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('master.metadata_spbe.destroy', $metadata->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('master.metadata_spbe.destroy', $metadata->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus metadata SPBE ini?')">
+                                                <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Yakin ingin menghapus metadata SPBE ini?')">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>

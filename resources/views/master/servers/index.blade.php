@@ -43,8 +43,12 @@
                             <tr>
                                 <th>STATUS</th>
                                 <th>ID</th>
+                                <th>NAMA SERVER</th>
                                 <th>TYPE</th>
                                 <th>IP</th>
+                                <th>JENIS PENGGUNAAN</th>
+                                <th>STATUS KEPEMILIKAN</th>
+                                <th>UNIT PENGELOLA</th>
                                 <th>HDD</th>
                                 <th>RAM</th>
                                 <th>CPU</th>
@@ -87,12 +91,28 @@
                         name: 'id'
                     },
                     {
+                        data: 'nama_server',
+                        name: 'nama_server'
+                    },
+                    {
                         data: 'type',
                         name: 'type'
                     },
                     {
                         data: 'ip',
                         name: 'ip'
+                    },
+                    {
+                        data: 'jenis_penggunaan_server',
+                        name: 'jenis_penggunaan_server'
+                    },
+                    {
+                        data: 'status_kepemilikan',
+                        name: 'status_kepemilikan'
+                    },
+                    {
+                        data: 'unit_pengelola',
+                        name: 'unit_pengelola'
                     },
                     {
                         data: 'hdd',

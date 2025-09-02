@@ -8,11 +8,13 @@
         <div class="form-group">
             {{ Form::label('code', 'Kode Aplikasi', ['class' => 'control-label']) }}
             {{ Form::text('code', isset($application->code) ? $application->code : (old('code') ? old('code') : $data['code']), ['class' => $errors->has('code') ? 'form-control is-invalid' : 'form-control']) }}
+            <small class="text-muted">Merupakan nomor unik sebagai identitas metadata</small>
             <span style="color:red !important;">{{ $errors->first('code') }}</span>
         </div>
         <div class="form-group">
             {{ Form::label('name', 'Nama Aplikasi', ['class' => 'control-label']) }} <span class="text-danger">*</span>
             {{ Form::text('name', isset($application->name) ? $application->name : old('name'), ['class' => $errors->has('name') ? 'form-control is-invalid' : 'form-control']) }}
+            <small class="text-muted">Nama aplikasi yang digunakan atau dimiliki</small>
             <span style="color:red !important;">{{ $errors->first('name') }}</span>
         </div>
         <div class="form-group">
@@ -22,11 +24,13 @@
                 isset($application->keterangan) ? $application->keterangan : old('description'),
                 ['class' => $errors->has('status') ? 'form-control is-invalid' : 'form-control', 'rows' => 4],
             ) }}
+            <small class="text-muted">Berisi uraian atau deskripsi secara umum dari aplikasi</small>
             <span style="color:red !important;">{{ $errors->first('description') }}</span>
         </div>
         <div class="form-group">
             {{ Form::label('version', 'Versi', ['class' => 'control-label']) }} <span class="text-danger">*</span>
             {{ Form::text('version', isset($application->version) ? $application->version : old('version'), ['class' => $errors->has('version') ? 'form-control is-invalid' : 'form-control']) }}
+            <small class="text-muted">Versi aplikasi yang sedang digunakan</small>
             <span style="color:red !important;">{{ $errors->first('version') }}</span>
         </div>
         <div class="form-group">
@@ -45,10 +49,12 @@
                 isset($application->user_base) ? $application->user_base : old('user_base'),
                 ['class' => $errors->has('user_base') ? 'form-control is-invalid' : 'form-control'],
             ) }}
+            <small class="text-muted">Jumlah pengguna yang menggunakan aplikasi</small>
             <span style="color:red !important;">{{ $errors->first('user_base') }}</span>
         </div>
         <div class="form-group">
             {{ Form::label('scope', 'Tipe Layanan', ['class' => 'control-label']) }} <span class="text-danger">*</span>
+            <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
             {{ Form::select(
                 'scope',
                 [
@@ -125,6 +131,7 @@
                 isset($application->platform) ? $application->platform : old('platform'),
                 ['class' => $errors->has('platform') ? 'form-control is-invalid' : 'form-control'],
             ) }}
+            <small class="text-muted">Platform atau jenis aplikasi yang digunakan</small>
             <span style="color:red !important;">{{ $errors->first('platform') }}</span>
         </div>
         <div class="form-group">
@@ -134,7 +141,121 @@
                 isset($application->fungsi) ? $application->fungsi : old('fungsi'),
                 ['class' => $errors->has('fungsi') ? 'form-control is-invalid' : 'form-control', 'rows' => 4],
             ) }}
+            <small class="text-muted">Berisi keterangan fungsi dari aplikasi terhadap layanan yang didukung</small>
             <span style="color:red !important;">{{ $errors->first('fungsi') }}</span>
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Metadata SPBE</h4>
+        <p>
+            Informasi metadata SPBE untuk aplikasi ini.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('refferensi_code', 'Kode Model Referensi SPBE', ['class' => 'control-label']) }}
+            {{ Form::text('refferensi_code', isset($application->refferensi_code) ? $application->refferensi_code : old('refferensi_code'), ['class' => $errors->has('refferensi_code') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Contoh: SPBE-001']) }}
+            <small class="text-muted">Kode model referensi yang terkait dengan aplikasi</small>
+            <span style="color:red !important;">{{ $errors->first('refferensi_code') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('id_layanan', 'Layanan yang Didukung', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'id_layanan',
+                $data['layanans'] ?? [],
+                isset($application->id_layanan) ? $application->id_layanan : old('id_layanan'),
+                ['class' => $errors->has('id_layanan') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Layanan'],
+            ) }}
+            <small class="text-muted">Layanan yang didukung oleh aplikasi, pilihan layanan yang didukung didapat dari metadata layanan</small>
+            <span style="color:red !important;">{{ $errors->first('id_layanan') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('id_data', 'Data yang Digunakan', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'id_data',
+                $data['data_metadata'] ?? [],
+                isset($application->id_data) ? $application->id_data : old('id_data'),
+                ['class' => $errors->has('id_data') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Data'],
+            ) }}
+            <small class="text-muted">Data yang disimpan pada media penyimpanan data, pilihan data yang digunakan didapat dari metadata data</small>
+            <span style="color:red !important;">{{ $errors->first('id_data') }}</span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('luaran', 'Luaran/Hasil Aplikasi', ['class' => 'control-label']) }}
+            {{ Form::textarea(
+                'luaran',
+                isset($application->luaran) ? $application->luaran : old('luaran'),
+                ['class' => $errors->has('luaran') ? 'form-control is-invalid' : 'form-control', 'rows' => 4, 'placeholder' => 'Jelaskan hasil/luaran dari aplikasi ini'],
+            ) }}
+            <small class="text-muted">Merupakan hasil-hasil yang diperoleh dari aplikasi yang dimiliki atau digunakan</small>
+            <span style="color:red !important;">{{ $errors->first('luaran') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('id_metadata_terkait', 'ID Metadata SPBE Terkait', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'id_metadata_terkait',
+                $data['metadata_spbe'] ?? [],
+                isset($application->id_metadata_terkait) ? $application->id_metadata_terkait : old('id_metadata_terkait'),
+                ['class' => $errors->has('id_metadata_terkait') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Metadata SPBE'],
+            ) }}
+            <small class="text-muted">Mengacu kepada metadata SPBE terkait</small>
+            <span style="color:red !important;">{{ $errors->first('id_metadata_terkait') }}</span>
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Data Flow</h4>
+        <p>
+            Informasi alur data aplikasi.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('inputan_data', 'Inputan Data yang Dibutuhkan', ['class' => 'control-label']) }}
+            {{ Form::textarea(
+                'inputan_data',
+                isset($application->inputan_data) ? $application->inputan_data : old('inputan_data'),
+                ['class' => $errors->has('inputan_data') ? 'form-control is-invalid' : 'form-control', 'rows' => 3, 'placeholder' => 'Jelaskan data input yang dibutuhkan aplikasi'],
+            ) }}
+            <small class="text-muted">Merupakan identifikasi terhadap data yang dibutuhkan (diinput)</small>
+            <span style="color:red !important;">{{ $errors->first('inputan_data') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('supplier_data', 'Supplier Data/Penghasil Data', ['class' => 'control-label']) }}
+            {{ Form::text('supplier_data', isset($application->supplier_data) ? $application->supplier_data : old('supplier_data'), ['class' => $errors->has('supplier_data') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Contoh: Unit A, Unit B']) }}
+            <small class="text-muted">Merupakan identifikasi terhadap nama penghasil data</small>
+            <span style="color:red !important;">{{ $errors->first('supplier_data') }}</span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('luaran_data', 'Luaran Data yang Dihasilkan', ['class' => 'control-label']) }}
+            {{ Form::textarea(
+                'luaran_data',
+                isset($application->luaran_data) ? $application->luaran_data : old('luaran_data'),
+                ['class' => $errors->has('luaran_data') ? 'form-control is-invalid' : 'form-control', 'rows' => 3, 'placeholder' => 'Jelaskan data output yang dihasilkan aplikasi'],
+            ) }}
+            <small class="text-muted">Merupakan identifikasi terhadap data yang dihasilkan</small>
+            <span style="color:red !important;">{{ $errors->first('luaran_data') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('customer_data', 'Customer Data/Pengguna Data', ['class' => 'control-label']) }}
+            {{ Form::text('customer_data', isset($application->customer_data) ? $application->customer_data : old('customer_data'), ['class' => $errors->has('customer_data') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Contoh: Unit C, Unit D']) }}
+            <small class="text-muted">Merupakan identifikasi terhadap pengguna data</small>
+            <span style="color:red !important;">{{ $errors->first('customer_data') }}</span>
         </div>
     </div>
 </div>
@@ -264,6 +385,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('database', 'Database', ['class' => 'control-label']) }}
+            <small class="text-muted">Basis data yang digunakan oleh aplikasi</small>
             {{ Form::select(
                 'database',
                 $data['databases'],
@@ -274,8 +396,94 @@
         </div>
         <div class="form-group">
             {{ Form::label('language', 'Bahasa Pemrograman', ['class' => 'control-label']) }} <span class="text-danger">*</span>
+            <small class="text-muted">Bahasa pemrograman yang digunakan oleh aplikasi</small>
             {{ Form::select('language[]',$data['languages'],isset($data['language']) ? $data['language'] : old('language'), ['class' => $errors->has('language') ? 'form-control is-invalid' : 'form-control','id'=>'bahasa-pemrograman','multiple'=>true]) }}
             <span style="color:red !important;">{{ $errors->first('url') }}</span>
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Teknis Lanjutan</h4>
+        <p>
+            Informasi teknis lanjutan aplikasi.
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('basis_aplikasi', 'Basis Aplikasi', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'basis_aplikasi',
+                [
+                    'desktop' => 'Desktop',
+                    'web' => 'Web',
+                    'cloud' => 'Cloud',
+                    'mobile' => 'Mobile'
+                ],
+                isset($application->basis_aplikasi) ? $application->basis_aplikasi : old('basis_aplikasi'),
+                ['class' => $errors->has('basis_aplikasi') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Basis Aplikasi'],
+            ) }}
+            <small class="text-muted">Basis dari aplikasi (Desktop; Web; Cloud; atau Mobile)</small>
+            <span style="color:red !important;">{{ $errors->first('basis_aplikasi') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('server_aplikasi', 'Server Aplikasi', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'server_aplikasi',
+                $data['servers'] ?? [],
+                isset($application->server_aplikasi) ? $application->server_aplikasi : old('server_aplikasi'),
+                ['class' => $errors->has('server_aplikasi') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Server Aplikasi'],
+            ) }}
+            <small class="text-muted">Server yang digunakan oleh aplikasi, pilihan server yang digunakan didapat dari metadata perangkat keras server</small>
+            <span style="color:red !important;">{{ $errors->first('server_aplikasi') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('tipe_lisensi', 'Tipe Lisensi', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'tipe_lisensi',
+                [
+                    'open_source' => 'Open Source',
+                    'proprietary' => 'Proprietary'
+                ],
+                isset($application->tipe_lisensi) ? $application->tipe_lisensi : old('tipe_lisensi'),
+                ['class' => $errors->has('tipe_lisensi') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Tipe Lisensi'],
+            ) }}
+            <small class="text-muted">Tipe lisensi dari aplikasi (Open Source/Proprietary)</small>
+            <span style="color:red !important;">{{ $errors->first('tipe_lisensi') }}</span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ Form::label('kerangka_pengembangan', 'Kerangka Pengembangan/Framework', ['class' => 'control-label']) }}
+            {{ Form::text('kerangka_pengembangan', isset($application->kerangka_pengembangan) ? $application->kerangka_pengembangan : old('kerangka_pengembangan'), ['class' => $errors->has('kerangka_pengembangan') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Contoh: Laravel, React, Angular']) }}
+            <small class="text-muted">Kerangka atau Framework yang digunakan oleh aplikasi</small>
+            <span style="color:red !important;">{{ $errors->first('kerangka_pengembangan') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('unit_pengembang', 'Unit Pengembang', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'unit_pengembang',
+                $data['units'] ?? [],
+                isset($application->unit_pengembang) ? $application->unit_pengembang : old('unit_pengembang'),
+                ['class' => $errors->has('unit_pengembang') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Unit Pengembang'],
+            ) }}
+            <small class="text-muted">Unit yang melakukan pembangunan dan pengembangan aplikasi</small>
+            <span style="color:red !important;">{{ $errors->first('unit_pengembang') }}</span>
+        </div>
+        <div class="form-group">
+            {{ Form::label('unit_operasional_teknologi', 'Unit Operasional Teknologi', ['class' => 'control-label']) }}
+            {{ Form::select(
+                'unit_operasional_teknologi',
+                $data['units'] ?? [],
+                isset($application->unit_operasional_teknologi) ? $application->unit_operasional_teknologi : old('unit_operasional_teknologi'),
+                ['class' => $errors->has('unit_operasional_teknologi') ? 'form-control is-invalid' : 'form-control', 'placeholder' => 'Pilih Unit Operasional'],
+            ) }}
+            <small class="text-muted">Unit yang melakukan operasional teknologi layanan</small>
+            <span style="color:red !important;">{{ $errors->first('unit_operasional_teknologi') }}</span>
         </div>
     </div>
 </div>

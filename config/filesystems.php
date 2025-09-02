@@ -62,7 +62,7 @@ return [
 
         'user_files' => [
             'driver' => 'local',
-            'root'   => '/mnt/user-files',
+            'root'   => storage_path('app/user-files'),
             'visibility' => 'private',
         ],
 

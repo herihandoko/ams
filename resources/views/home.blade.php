@@ -62,13 +62,13 @@
         <!-- begin col-3 -->
         <div class="col-md-3 col-sm-6">
             <div class="widget widget-stats bg-red">
-                <div class="stats-icon"><i class="fa fa-server"></i></div>
+                <div class="stats-icon"><i class="fa fa-archive"></i></div>
                 <div class="stats-info">
-                    <h4>TOTAL HARDWARE</h4>
-                    <p>{{ number_format($hardware, 0) }}</p>
+                    <h4>ARCHIVED APPLICATIONS</h4>
+                    <p>{{ number_format($app_inactive, 0) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="{{ route('inventory.hardware.index') }}">View Detail <i
+                    <a href="{{ route('inventory.application.index', ['status' => 'inactive']) }}">View Detail <i
                             class="fa fa-arrow-circle-o-right"></i></a>
                 </div>
             </div>

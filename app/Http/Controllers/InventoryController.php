@@ -15,6 +15,10 @@ use App\Model\StatusAplikasi;
 use App\Opd;
 use App\Program;
 use App\Servers;
+use App\Layanan;
+use App\DataMetadata;
+use App\Unit;
+use App\MetadataSpbe;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -40,6 +44,12 @@ class InventoryController extends Controller
         $data['moduleCode'] = $this->moduleCode;
         $data['status'] = $request->status;
         $data['opd_id'] = $request->opd_id;
+        
+        // Data untuk dropdown baru
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
+        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
+        $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
         return view('inventory.application.index', compact('data'));
     }
 
@@ -65,6 +75,12 @@ class InventoryController extends Controller
         $data['databases'] = Dbinventory::pluck('name', 'id')->prepend('Select Database', '');
         $data['languages'] = Language::pluck('name', 'id');
         $data['status_app'] = StatusAplikasi::pluck('name', 'code');
+        
+        // Data untuk dropdown baru
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
+        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
+        $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
         return view('inventory.application.create', compact('data'));
     }
 
@@ -83,6 +99,7 @@ class InventoryController extends Controller
         $inventory->user_base = $request->user_base;
         $inventory->scope = $request->scope;
         $inventory->keterangan = $request->description;
+        $inventory->fungsi = $request->fungsi;
         $inventory->opd_id = $request->opd_id;
         $inventory->category_id = $request->category;
         $inventory->url = $request->url;
@@ -104,6 +121,24 @@ class InventoryController extends Controller
         $inventory->sumber_dana = $request->sumber_dana;
         $inventory->tahun_pembuatan = $request->tahun_pembuatan;
         $inventory->ip_address = $request->ip_address;
+        
+        // Field baru untuk SPBE
+        $inventory->refferensi_code = $request->refferensi_code;
+        $inventory->id_layanan = $request->id_layanan;
+        $inventory->id_data = $request->id_data;
+        $inventory->luaran = $request->luaran;
+        $inventory->inputan_data = $request->inputan_data;
+        $inventory->supplier_data = $request->supplier_data;
+        $inventory->luaran_data = $request->luaran_data;
+        $inventory->customer_data = $request->customer_data;
+        $inventory->basis_aplikasi = $request->basis_aplikasi;
+        $inventory->server_aplikasi = $request->server_aplikasi;
+        $inventory->tipe_lisensi = $request->tipe_lisensi;
+        $inventory->kerangka_pengembangan = $request->kerangka_pengembangan;
+        $inventory->unit_pengembang = $request->unit_pengembang;
+        $inventory->unit_operasional_teknologi = $request->unit_operasional_teknologi;
+        $inventory->id_metadata_terkait = $request->id_metadata_terkait;
+        
         if ($inventory->save()) {
             $docSpd = $request->doc_spd;
             if ($docSpd) {
@@ -217,6 +252,12 @@ class InventoryController extends Controller
         $data['application'] = Inventory::with('category', 'opd', 'program')->where('id', $id)->first();
         $data['moduleCode'] = $this->moduleCode;
         $data['documents'] = Document::select('id', 'inventory', 'url')->where('inventory_id', $id)->get();
+        
+        // Data untuk dropdown baru
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
+        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
+        $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
         return view('inventory.application.show', compact('data'));
     }
 
@@ -246,6 +287,12 @@ class InventoryController extends Controller
         $data['language'] = InventoryHasLanguage::select('language_id')->where('inventory_id', $id)->pluck('language_id');
         $data['status_app'] = StatusAplikasi::pluck('name', 'code');
         $data['services'] = InventoryHasService::where('inventory_id', $id)->get();
+        
+        // Data untuk dropdown baru
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
+        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
+        $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
         return view('inventory.application.edit', compact('data'));
     }
 
@@ -267,6 +314,7 @@ class InventoryController extends Controller
         $inventory->user_base = $request->user_base;
         $inventory->scope = $request->scope;
         $inventory->keterangan = $request->description;
+        $inventory->fungsi = $request->fungsi;
         $inventory->opd_id = $request->opd_id;
         $inventory->category_id = $request->category;
         $inventory->url = $request->url;
@@ -288,6 +336,24 @@ class InventoryController extends Controller
         $inventory->sumber_dana = $request->sumber_dana;
         $inventory->tahun_pembuatan = $request->tahun_pembuatan;
         $inventory->ip_address = $request->ip_address;
+        
+        // Field baru untuk SPBE
+        $inventory->refferensi_code = $request->refferensi_code;
+        $inventory->id_layanan = $request->id_layanan;
+        $inventory->id_data = $request->id_data;
+        $inventory->luaran = $request->luaran;
+        $inventory->inputan_data = $request->inputan_data;
+        $inventory->supplier_data = $request->supplier_data;
+        $inventory->luaran_data = $request->luaran_data;
+        $inventory->customer_data = $request->customer_data;
+        $inventory->basis_aplikasi = $request->basis_aplikasi;
+        $inventory->server_aplikasi = $request->server_aplikasi;
+        $inventory->tipe_lisensi = $request->tipe_lisensi;
+        $inventory->kerangka_pengembangan = $request->kerangka_pengembangan;
+        $inventory->unit_pengembang = $request->unit_pengembang;
+        $inventory->unit_operasional_teknologi = $request->unit_operasional_teknologi;
+        $inventory->id_metadata_terkait = $request->id_metadata_terkait;
+        
         if ($inventory->save()) {
             Document::where('inventory_id', $inventory->id)->delete();
             InventoryHasLanguage::where('inventory_id', $inventory->id)->delete();

@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InventorySyncController;
+use App\Http\Controllers\LayananController;
+use App\Http\Controllers\DataMetadataController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\MetadataSpbeController;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Route;
 use App\Model\User;
@@ -113,6 +117,42 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::post('servers/store', 'ServersController@store')->name('master.servers.store');
         Route::put('servers/update', 'ServersController@update')->name('master.servers.update');
         Route::delete('servers/destroy', 'ServersController@destroy')->name('master.servers.destroy');
+
+        // Master Layanan
+        Route::get('layanan', [LayananController::class, 'index'])->name('master.layanan.index');
+        Route::get('layanan/create', [LayananController::class, 'create'])->name('master.layanan.create');
+        Route::post('layanan', [LayananController::class, 'store'])->name('master.layanan.store');
+        Route::get('layanan/{layanan}', [LayananController::class, 'show'])->name('master.layanan.show');
+        Route::get('layanan/{layanan}/edit', [LayananController::class, 'edit'])->name('master.layanan.edit');
+        Route::put('layanan/{layanan}', [LayananController::class, 'update'])->name('master.layanan.update');
+        Route::delete('layanan/{layanan}', [LayananController::class, 'destroy'])->name('master.layanan.destroy');
+        
+        // Master Data Metadata
+        Route::get('data_metadata', [DataMetadataController::class, 'index'])->name('master.data_metadata.index');
+        Route::get('data_metadata/create', [DataMetadataController::class, 'create'])->name('master.data_metadata.create');
+        Route::post('data_metadata', [DataMetadataController::class, 'store'])->name('master.data_metadata.store');
+        Route::get('data_metadata/{dataMetadata}', [DataMetadataController::class, 'show'])->name('master.data_metadata.show');
+        Route::get('data_metadata/{dataMetadata}/edit', [DataMetadataController::class, 'edit'])->name('master.data_metadata.edit');
+        Route::put('data_metadata/{dataMetadata}', [DataMetadataController::class, 'update'])->name('master.data_metadata.update');
+        Route::delete('data_metadata/{dataMetadata}', [DataMetadataController::class, 'destroy'])->name('master.data_metadata.destroy');
+        
+        // Master Unit
+        Route::get('unit', [UnitController::class, 'index'])->name('master.unit.index');
+        Route::get('unit/create', [UnitController::class, 'create'])->name('master.unit.create');
+        Route::post('unit', [UnitController::class, 'store'])->name('master.unit.store');
+        Route::get('unit/{unit}', [UnitController::class, 'show'])->name('master.unit.show');
+        Route::get('unit/{unit}/edit', [UnitController::class, 'edit'])->name('master.unit.edit');
+        Route::put('unit/{unit}', [UnitController::class, 'update'])->name('master.unit.update');
+        Route::delete('unit/{unit}', [UnitController::class, 'destroy'])->name('master.unit.destroy');
+        
+        // Master Metadata SPBE
+        Route::get('metadata_spbe', [MetadataSpbeController::class, 'index'])->name('master.metadata_spbe.index');
+        Route::get('metadata_spbe/create', [MetadataSpbeController::class, 'create'])->name('master.metadata_spbe.create');
+        Route::post('metadata_spbe', [MetadataSpbeController::class, 'store'])->name('master.metadata_spbe.store');
+        Route::get('metadata_spbe/{metadataSpbe}', [MetadataSpbeController::class, 'show'])->name('master.metadata_spbe.show');
+        Route::get('metadata_spbe/{metadataSpbe}/edit', [MetadataSpbeController::class, 'edit'])->name('master.metadata_spbe.edit');
+        Route::put('metadata_spbe/{metadataSpbe}', [MetadataSpbeController::class, 'update'])->name('master.metadata_spbe.update');
+        Route::delete('metadata_spbe/{metadataSpbe}', [MetadataSpbeController::class, 'destroy'])->name('master.metadata_spbe.destroy');
     });
 
     Route::group(['prefix' => 'settings'], function () {

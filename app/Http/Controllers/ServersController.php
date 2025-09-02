@@ -44,6 +44,9 @@ class ServersController extends Controller
         $this->authorize('create', $this->moduleCode);
         $data['moduleCode'] = $this->moduleCode;
         $data['hardware'] = Hardware::pluck('inventory_tag', 'id')->prepend('Select Hardware', '');
+        $data['units'] = \App\Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Pilih Unit', '');
+        $data['metadata_spbe'] = \App\MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Pilih Metadata SPBE', '');
+        $data['software_platforms'] = \App\SoftwarePlatform::where('status', 'active')->pluck('nama_perangkat_lunak', 'id')->prepend('Pilih Software Platform', '');
         return view('master.servers.create', compact('data'));
     }
 
@@ -74,6 +77,20 @@ class ServersController extends Controller
         $model->cpu = $request->cpu;
         $model->status = $request->status;
         $model->service = $request->service;
+        
+        // Field baru
+        $model->nama_server = $request->nama_server;
+        $model->deskripsi_server = $request->deskripsi_server;
+        $model->jenis_penggunaan_server = $request->jenis_penggunaan_server;
+        $model->status_kepemilikan = $request->status_kepemilikan;
+        $model->nama_pemilik = $request->nama_pemilik;
+        $model->unit_pengelola_id = $request->unit_pengelola_id;
+        $model->lokasi_fasilitas_id = $request->lokasi_fasilitas_id;
+        $model->perangkat_lunak_id = $request->perangkat_lunak_id;
+        $model->jenis_teknologi_prosesor = $request->jenis_teknologi_prosesor;
+        $model->teknik_penyimpanan = $request->teknik_penyimpanan;
+        $model->id_metadata_terkait = $request->id_metadata_terkait;
+        
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
         return redirect()->route('master.servers.index')->with('success', 'Tambah Kategori Berhasil.');
@@ -105,6 +122,9 @@ class ServersController extends Controller
         $this->authorize('update', $this->moduleCode);
         $data['servers'] = Servers::find($id);
         $data['hardware'] = Hardware::pluck('inventory_tag', 'id')->prepend('Select Hardware', '');
+        $data['units'] = \App\Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Pilih Unit', '');
+        $data['metadata_spbe'] = \App\MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Pilih Metadata SPBE', '');
+        $data['software_platforms'] = \App\SoftwarePlatform::where('status', 'active')->pluck('nama_perangkat_lunak', 'id')->prepend('Pilih Software Platform', '');
         return view('master.servers.edit', compact('data'));
     }
 
@@ -135,6 +155,20 @@ class ServersController extends Controller
         $model->cpu = $request->cpu;
         $model->status = $request->status;
         $model->service = $request->service;
+        
+        // Field baru
+        $model->nama_server = $request->nama_server;
+        $model->deskripsi_server = $request->deskripsi_server;
+        $model->jenis_penggunaan_server = $request->jenis_penggunaan_server;
+        $model->status_kepemilikan = $request->status_kepemilikan;
+        $model->nama_pemilik = $request->nama_pemilik;
+        $model->unit_pengelola_id = $request->unit_pengelola_id;
+        $model->lokasi_fasilitas_id = $request->lokasi_fasilitas_id;
+        $model->perangkat_lunak_id = $request->perangkat_lunak_id;
+        $model->jenis_teknologi_prosesor = $request->jenis_teknologi_prosesor;
+        $model->teknik_penyimpanan = $request->teknik_penyimpanan;
+        $model->id_metadata_terkait = $request->id_metadata_terkait;
+        
         $model->updated_at = date('Y-m-d H:i:s');
         $model->save();
         return redirect()->route('master.servers.index')->with('success', 'Update Server Berhasil.');
@@ -159,11 +193,55 @@ class ServersController extends Controller
     {
         $this->authorize('viewAny', $this->moduleCode);
         $user = Auth::user();
-        $data = Servers::with('hardware');
+        $data = Servers::select([
+            'id', 'ip', 'type', 'id_hardware', 'hdd', 'ram', 'cpu', 'service', 'status',
+            'nama_server', 'deskripsi_server', 'jenis_penggunaan_server', 'status_kepemilikan',
+            'nama_pemilik', 'unit_pengelola_id', 'lokasi_fasilitas_id', 'perangkat_lunak_id',
+            'jenis_teknologi_prosesor', 'teknik_penyimpanan', 'id_metadata_terkait'
+        ])->with(['hardware', 'unitPengelola', 'lokasiFasilitas', 'perangkatLunak', 'metadataSpbe']);
+        // Debug: Log the first server data to see what's being sent
+        \Log::info('First server data:', [
+            'id' => $data->first()?->id,
+            'nama_server' => $data->first()?->nama_server,
+            'ip' => $data->first()?->ip,
+            'jenis_penggunaan_server' => $data->first()?->jenis_penggunaan_server
+        ]);
+        
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nama_server', function ($row) {
+                return $row->nama_server ?: '-';
+            })
             ->addColumn('hardware', function ($row) {
-                return $row->hardware->inventory_tag;
+                return $row->hardware ? $row->hardware->inventory_tag : '-';
+            })
+            ->addColumn('unit_pengelola', function ($row) {
+                return $row->unitPengelola ? $row->unitPengelola->nama_unit : '-';
+            })
+            ->addColumn('jenis_penggunaan_server', function ($row) {
+                if (!$row->jenis_penggunaan_server) return '-';
+                
+                $jenis = [
+                    'web_server' => 'Web Server',
+                    'mail_server' => 'Mail Server',
+                    'aplikasi' => 'Aplikasi',
+                    'database' => 'Database',
+                    'file_server' => 'File Server',
+                    'active_directory' => 'Active Directory',
+                    'keamanan_informasi' => 'Keamanan Informasi',
+                ];
+                return $jenis[$row->jenis_penggunaan_server] ?? $row->jenis_penggunaan_server;
+            })
+            ->addColumn('status_kepemilikan', function ($row) {
+                if (!$row->status_kepemilikan) return '-';
+                
+                $status = [
+                    'milik_sendiri' => 'Milik Sendiri',
+                    'milik_instansi_pemerintah_lain' => 'Milik Instansi Pemerintah Lain',
+                    'milik_bumn' => 'Milik BUMN',
+                    'milik_pihak_ketiga' => 'Milik Pihak Ketiga',
+                ];
+                return $status[$row->status_kepemilikan] ?? $row->status_kepemilikan;
             })
             ->addColumn('status', function ($row) {
                 if ($row->status == 'active') {
@@ -187,6 +265,7 @@ class ServersController extends Controller
                     $instance->where(function ($w) use ($request) {
                         $search = $request->get('search');
                         $w->orWhere('ip', 'LIKE', "%" . Str::lower($search['value']) . "%");
+                        $w->orWhere('nama_server', 'LIKE', "%" . Str::lower($search['value']) . "%");
                     });
                 }
             })

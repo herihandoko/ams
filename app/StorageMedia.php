@@ -4,47 +4,42 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Servers extends Model
+class StorageMedia extends Model
 {
     use HasFactory;
 
+    protected $table = 'storage_media';
+
     protected $fillable = [
-        'ip',
-        'type',
-        'id_hardware',
-        'hdd',
-        'ram',
-        'cpu',
-        'service',
-        'nama_server',
-        'deskripsi_server',
-        'jenis_penggunaan_server',
+        'nama_data_storage',
+        'deskripsi_data_storage',
+        'data_yang_digunakan_id',
         'status_kepemilikan',
         'nama_pemilik',
         'unit_pengelola_id',
-        'lokasi_fasilitas_id',
+        'lokasi_data_storage_id',
         'perangkat_lunak_id',
-        'jenis_teknologi_prosesor',
-        'teknik_penyimpanan',
-        'id_metadata_terkait'
+        'kapasitas_penyimpanan',
+        'metode_akses_data_sharing',
+        'id_metadata_terkait',
+        'status'
     ];
 
-    public function hardware(): HasOne
+    // Relationships
+    public function dataYangDigunakan()
     {
-        return $this->hasOne(Hardware::class, 'id', 'id_hardware');
+        return $this->belongsTo(DataMetadata::class, 'data_yang_digunakan_id');
     }
 
-    // Relationships baru
     public function unitPengelola()
     {
         return $this->belongsTo(Unit::class, 'unit_pengelola_id');
     }
 
-    public function lokasiFasilitas()
+    public function lokasiDataStorage()
     {
-        return $this->belongsTo(MetadataSpbe::class, 'lokasi_fasilitas_id');
+        return $this->belongsTo(MetadataSpbe::class, 'lokasi_data_storage_id');
     }
 
     public function perangkatLunak()

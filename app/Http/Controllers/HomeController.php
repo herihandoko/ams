@@ -31,13 +31,52 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Inventory stats
         $appAll = Inventory::count();
         $appActive = Inventory::where('status', 'active')->count();
         $appInactive = Inventory::where('status', 'inactive')->count();
         $hardware = Hardware::count();
+        
+        // Hosting type stats
         $onprem = Inventory::where('type_hosting', 'on_prem')->count();
         $hybrid = Inventory::where('type_hosting', 'hybrid')->count();
         $cloud = Inventory::where('type_hosting', 'cloud')->count();
+        
+        // Master data stats
+        $totalUnits = \App\Unit::where('status', 'aktif')->count();
+        $totalLayanan = \App\Layanan::where('status', 'aktif')->count();
+        $totalMetadataSpbe = \App\MetadataSpbe::where('status', 'aktif')->count();
+        $totalDataMetadata = \App\DataMetadata::where('status', 'aktif')->count();
+        $totalGovernmentCloud = \App\GovernmentCloud::where('status', 'active')->count();
+        $totalSoftwarePlatform = \App\SoftwarePlatform::where('status', 'active')->count();
+        $totalServers = \App\Servers::where('status', 'active')->count();
+        $totalStorageMedia = \App\StorageMedia::where('status', 'active')->count();
+        
+        // Top applications by cost
+        $topAppsByCost = Inventory::select('name', 'harga')
+            ->where('harga', '>', 0)
+            ->orderBy('harga', 'desc')
+            ->take(5)
+            ->get();
+            
+        // Recent applications
+        $recentApps = Inventory::select('id', 'name', 'status', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+            
+        // Master data distribution
+        $masterDataStats = [
+            'units' => $totalUnits,
+            'layanan' => $totalLayanan,
+            'metadata_spbe' => $totalMetadataSpbe,
+            'data_metadata' => $totalDataMetadata,
+            'government_cloud' => $totalGovernmentCloud,
+            'software_platform' => $totalSoftwarePlatform,
+            'servers' => $totalServers,
+            'storage_media' => $totalStorageMedia
+        ];
+        
         return view('home', [
             'app_all' => $appAll,
             'app_active' => $appActive,
@@ -47,7 +86,10 @@ class HomeController extends Controller
                 'on_prem' => $onprem,
                 'hybrid' => $hybrid,
                 'cloud' => $cloud
-            ]
+            ],
+            'master_data_stats' => $masterDataStats,
+            'top_apps_by_cost' => $topAppsByCost,
+            'recent_apps' => $recentApps
         ]);
     }
 

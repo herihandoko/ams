@@ -16,22 +16,26 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Layanan</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('master.layanan.index') }}" class="btn btn-secondary btn-sm">
-                            <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
-                        <a href="{{ route('master.layanan.edit', $layanan->id) }}" class="btn btn-warning btn-sm">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
-                    </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                 </div>
-                <div class="card-body">
+                <h4 class="panel-title">Detail Layanan</h4>
+                <div class="panel-heading-btn">
+                    <a href="{{ route('master.layanan.index') }}" class="btn btn-xs btn-default">
+                        <i class="fa fa-arrow-left"></i> Kembali
+                    </a>
+                    <a href="{{ route('master.layanan.edit', $layanan->id) }}" class="btn btn-xs btn-warning">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
                             <table class="table table-borderless">
@@ -70,7 +74,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>

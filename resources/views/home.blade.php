@@ -38,7 +38,7 @@
                     <p>{{ number_format($app_active, 0) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="{{ route('inventory.application.index', ['status' => 'inactive']) }}">View Detail <i
+                    <a href="{{ route('inventory.application.index', ['status' => 'active']) }}">View Detail <i
                             class="fa fa-arrow-circle-o-right"></i></a>
                 </div>
             </div>
@@ -80,10 +80,10 @@
                 <div class="stats-icon"><i class="fa fa-database"></i></div>
                 <div class="stats-info">
                     <h4>MASTER DATA</h4>
-                    <p>{{ number_format(array_sum($master_data_stats), 0) }}</p>
+                    <p>{{ number_format($data_metadata, 0) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="javascript:;" onclick="scrollToMasterData()">View Detail <i
+                    <a href="{{ route('master.data_metadata.index') }}" onclick="scrollToMasterData()">View Detail <i
                             class="fa fa-arrow-circle-o-right"></i></a>
                 </div>
             </div>

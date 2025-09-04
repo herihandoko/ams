@@ -88,6 +88,7 @@ class HomeController extends Controller
                 'cloud' => $cloud
             ],
             'master_data_stats' => $masterDataStats,
+            'data_metadata' => $totalDataMetadata,
             'top_apps_by_cost' => $topAppsByCost,
             'recent_apps' => $recentApps
         ]);

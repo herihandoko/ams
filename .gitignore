@@ -49,7 +49,7 @@ Thumbs.db
 *.wmv
 
 # Vendor
-vendor/
+/vendor/
 
 #Env
 .env

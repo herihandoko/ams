@@ -32,7 +32,7 @@ class HomeController extends Controller
     public function index()
     {
         // Inventory stats
-        $appAll = Inventory::count();
+        $appAll = Inventory::where('status', 'active')->count();
         $appActive = Inventory::where('status', 'active')->count();
         $appInactive = Inventory::where('status', 'inactive')->count();
         $hardware = Hardware::count();
@@ -122,7 +122,7 @@ class HomeController extends Controller
 
     public function stsapp(): JsonResponse
     {
-        $inventories = Inventory::select('status')->get();
+        $inventories = Inventory::select('status')->where('status','active')->get();
         $active = 0;
         $inactive = 0;
         foreach ($inventories as $key => $value) {
@@ -151,7 +151,9 @@ class HomeController extends Controller
 
     public function opdapp(): JsonResponse
     {
-        $data = Opd::select('id', 'code', 'name')->withCount('inventory');
+        $data = Opd::select('id', 'code', 'name')->withCount(['inventory' => function ($query) {
+            $query->where('status', 'active');
+        }]);
         // <a href="{{ route('inventory.application.index', ['status' => 'inactive']) }}">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
         return DataTables::of($data)
             ->addColumn('inventory_count', function ($row) {

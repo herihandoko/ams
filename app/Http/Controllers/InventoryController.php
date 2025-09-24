@@ -39,17 +39,98 @@ class InventoryController extends Controller
      */
     public function index(Request $request)
     {
-        //
         $this->authorize('viewAny', $this->moduleCode);
-        $data['moduleCode'] = $this->moduleCode;
-        $data['status'] = $request->status;
-        $data['opd_id'] = $request->opd_id;
         
-        // Data untuk dropdown baru
-        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
-        $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
-        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
-        $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
+        // Get filter parameters
+        $opdId = $request->get('opd_id');
+        $status = $request->get('status');
+        $categoryId = $request->get('category_id');
+        $layananId = $request->get('id_layanan');
+        $unitPengembang = $request->get('unit_pengembang');
+        $tahunPembuatan = $request->get('tahun_pembuatan');
+        $platform = $request->get('platform');
+        $typeHosting = $request->get('type_hosting');
+        $search = $request->get('search');
+        
+        // Build query - default hanya tampilkan status active
+        $query = Inventory::with('category', 'opd', 'statusapp', 'layanan', 'unitPengembang')
+            ->where('status', 'active');
+        
+        // Apply filters
+        if ($opdId) {
+            $query->where('opd_id', $opdId);
+        }
+        
+        // Jika user memilih filter status, override default
+        if ($status) {
+            if ($status == 'active') {
+                $query->where('status', 'active');
+            } else {
+                $query->where('status', 'inactive');
+            }
+        }
+        
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+        
+        if ($layananId) {
+            $query->where('id_layanan', $layananId);
+        }
+        
+        if ($unitPengembang) {
+            $query->where('unit_pengembang', $unitPengembang);
+        }
+        
+        if ($tahunPembuatan) {
+            $query->where('tahun_pembuatan', $tahunPembuatan);
+        }
+        
+        if ($platform) {
+            $query->where('platform', $platform);
+        }
+        
+        if ($typeHosting) {
+            $query->where('type_hosting', $typeHosting);
+        }
+        
+        // Search functionality
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('url', 'like', '%' . $search . '%')
+                  ->orWhere('ip_address', 'like', '%' . $search . '%')
+                  ->orWhereHas('opd', function($q) use ($search) {
+                      $q->where('name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('statusapp', function($q) use ($search) {
+                      $q->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+        
+        // Get paginated results
+        $inventories = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        // Prepare data for view
+        $data['moduleCode'] = $this->moduleCode;
+        $data['inventories'] = $inventories;
+        $data['status'] = $status;
+        $data['opd_id'] = $opdId;
+        $data['category_id'] = $categoryId;
+        $data['id_layanan'] = $layananId;
+        $data['unit_pengembang'] = $unitPengembang;
+        $data['tahun_pembuatan'] = $tahunPembuatan;
+        $data['platform'] = $platform;
+        $data['type_hosting'] = $typeHosting;
+        $data['search'] = $search;
+        
+        // Data untuk dropdown
+        $data['opds'] = Opd::pluck('name', 'id')->prepend('Semua OPD', '');
+        $data['categories'] = Category::pluck('name', 'id')->prepend('Semua Kategori', '');
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Semua Layanan', '');
+        $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Semua Unit Pengembang', '');
+        
         return view('inventory.application.index', compact('data'));
     }
 
@@ -479,6 +560,12 @@ class InventoryController extends Controller
         $start = $request->get("start");
         $opdId = $request->get("opd_id");
         $status = $request->get("status");
+        $categoryId = $request->get("category_id");
+        $layananId = $request->get("id_layanan");
+        $unitPengembang = $request->get("unit_pengembang");
+        $tahunPembuatan = $request->get("tahun_pembuatan");
+        $platform = $request->get("platform");
+        $typeHosting = $request->get("type_hosting");
         $rowperpage = $request->get("length");
 
         $columnIndex_arr = $request->get('order');
@@ -517,6 +604,30 @@ class InventoryController extends Controller
             } else {
                 $query->where('status', 'inactive');
             }
+        }
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($layananId) {
+            $query->where('id_layanan', $layananId);
+        }
+
+        if ($unitPengembang) {
+            $query->where('unit_pengembang', $unitPengembang);
+        }
+
+        if ($tahunPembuatan) {
+            $query->where('tahun_pembuatan', $tahunPembuatan);
+        }
+
+        if ($platform) {
+            $query->where('platform', $platform);
+        }
+
+        if ($typeHosting) {
+            $query->where('type_hosting', $typeHosting);
         }
 
         if ($searchValue) {

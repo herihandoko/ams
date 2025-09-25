@@ -31,6 +31,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+        
+        // Check if user has OPD role
+        if ($user->role_id && \App\Model\Roles::find($user->role_id)->name === 'User OPD') {
+            return $this->opdDashboard();
+        }
+        
+        // Default admin dashboard
+        return $this->adminDashboard();
+    }
+    
+    private function adminDashboard()
+    {
         // Inventory stats
         $appAll = Inventory::where('status', 'active')->count();
         $appActive = Inventory::where('status', 'active')->count();
@@ -91,6 +104,102 @@ class HomeController extends Controller
             'data_metadata' => $totalDataMetadata,
             'top_apps_by_cost' => $topAppsByCost,
             'recent_apps' => $recentApps
+        ]);
+    }
+    
+    private function opdDashboard()
+    {
+        $user = auth()->user();
+        
+        // Get OPD-specific data
+        $opdName = $user->opd->name ?? 'OPD Anda';
+        
+        // Inventory stats for this OPD
+        $totalApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('status', 'active')
+            ->count();
+            
+        $activeApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('status', 'active')
+            ->count();
+            
+        $inactiveApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('status', 'inactive')
+            ->count();
+        
+        // Platform distribution
+        $webApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('platform', 'web')
+            ->where('status', 'active')
+            ->count();
+            
+        $mobileApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('platform', 'mobile')
+            ->where('status', 'active')
+            ->count();
+            
+        $desktopApps = Inventory::where('opd_id', $user->opd_id)
+            ->where('platform', 'desktop')
+            ->where('status', 'active')
+            ->count();
+        
+        // Service distribution
+        $serviceStats = Inventory::where('opd_id', $user->opd_id)
+            ->where('status', 'active')
+            ->with('layanan')
+            ->get()
+            ->groupBy(function($app) {
+                return $app->layanan ? $app->layanan->nama_layanan : 'Tidak Ada Layanan';
+            })
+            ->map(function($apps) {
+                return $apps->count();
+            });
+        
+        // Prepare service stats for chart
+        $serviceLabels = $serviceStats->keys()->toArray();
+        $serviceData = $serviceStats->values()->toArray();
+        
+        // Recent applications
+        $recentApps = Inventory::where('opd_id', $user->opd_id)
+            ->with('category', 'statusapp')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Top applications by cost
+        $topAppsByCost = Inventory::where('opd_id', $user->opd_id)
+            ->where('harga', '>', 0)
+            ->orderBy('harga', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Applications by category
+        $appsByCategory = Inventory::where('opd_id', $user->opd_id)
+            ->where('status', 'active')
+            ->with('category')
+            ->get()
+            ->groupBy('category.name')
+            ->map(function($apps) {
+                return $apps->count();
+            });
+        
+        return view('opd-dashboard', [
+            'opd_name' => $opdName,
+            'total_apps' => $totalApps,
+            'active_apps' => $activeApps,
+            'inactive_apps' => $inactiveApps,
+            'platform_stats' => [
+                'web' => $webApps,
+                'mobile' => $mobileApps,
+                'desktop' => $desktopApps
+            ],
+            'service_stats' => [
+                'labels' => $serviceLabels,
+                'data' => $serviceData
+            ],
+            'recent_apps' => $recentApps,
+            'top_apps_by_cost' => $topAppsByCost,
+            'apps_by_category' => $appsByCategory
         ]);
     }
 

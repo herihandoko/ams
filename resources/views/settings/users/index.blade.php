@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-3 control-label">Select</label>
+                    <label class="col-md-3 control-label">Role</label>
                     <div class="col-md-9">
                         <select class="form-control" id="role_id" name="role_id">
                             <option value="" disabled selected>Pilih role user</option>
@@ -95,6 +95,18 @@
                             @endforeach
                         </select>
                         <div class="invalid-feedback invalid-role_id"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">OPD</label>
+                    <div class="col-md-9">
+                        <select class="form-control select2" id="opd_id" name="opd_id">
+                            <option value="" disabled selected>Pilih OPD</option>
+                            @foreach ($opds as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback invalid-opd_id"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -124,11 +136,19 @@
 @endsection
 @section('css')
 <link href="{{ asset('assets/plugins/password-indicator/css/password-indicator.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @stop
 @section('js')
 <script src="{{ asset('assets/plugins/password-indicator/js/password-indicator.js') }}"></script>
+<script src="{{ asset('assets/plugins/select2/dist/js/select2.min.js') }}"></script>
 <script>
     $(document).ready(function() {
+        // Initialize select2
+        $('.select2').select2({
+            placeholder: 'Pilih OPD',
+            allowClear: true,
+            width: '100%'
+        });
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -183,6 +203,13 @@
             });
             $('form#MyForm')[0].reset();
             $('button.btn-action-submit').show();
+            
+            // Initialize select2 when modal opens
+            $('.select2').select2({
+                placeholder: 'Pilih OPD',
+                allowClear: true,
+                width: '100%'
+            });
         });
 
         $('button.btn-action-submit').click(function(e) {
@@ -196,6 +223,8 @@
             });
             var _form = $("form#MyForm");
             var formData = new FormData(_form[0]);
+            
+            
             var _id = $('input#id').val();
             var _method = 'POST';
             var _url = "{{ route('settings.users.store') }}";
@@ -270,6 +299,18 @@
                         _field.val(data[inputName]);
                         _field.attr('disabled', false);
                     }
+                });
+                
+                // Set OPD value specifically
+                if (data.opd_id) {
+                    $('#opd_id').val(data.opd_id);
+                }
+                
+                // Re-initialize select2 after form is populated
+                $('.select2').select2({
+                    placeholder: 'Pilih OPD',
+                    allowClear: true,
+                    width: '100%'
                 });
             });
         });

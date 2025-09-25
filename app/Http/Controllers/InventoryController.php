@@ -56,7 +56,14 @@ class InventoryController extends Controller
         $query = Inventory::with('category', 'opd', 'statusapp', 'layanan', 'unitPengembang')
             ->where('status', 'active');
         
-        // Apply filters
+        // Apply OPD filter based on user login
+        $user = auth()->user();
+        if ($user->opd_id) {
+            // Jika user memiliki OPD, hanya tampilkan inventory dari OPD tersebut
+            $query->where('opd_id', $user->opd_id);
+        }
+        
+        // Apply additional filters from form
         if ($opdId) {
             $query->where('opd_id', $opdId);
         }
@@ -126,7 +133,14 @@ class InventoryController extends Controller
         $data['search'] = $search;
         
         // Data untuk dropdown
-        $data['opds'] = Opd::pluck('name', 'id')->prepend('Semua OPD', '');
+        if ($user->opd_id) {
+            // Jika user memiliki OPD, hanya tampilkan OPD tersebut
+            $data['opds'] = Opd::where('id', $user->opd_id)->pluck('name', 'id');
+        } else {
+            // Jika user tidak memiliki OPD, tampilkan semua OPD
+            $data['opds'] = Opd::pluck('name', 'id')->prepend('Semua OPD', '');
+        }
+        
         $data['categories'] = Category::pluck('name', 'id')->prepend('Semua Kategori', '');
         $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Semua Layanan', '');
         $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Semua Unit Pengembang', '');
@@ -148,7 +162,16 @@ class InventoryController extends Controller
         $desiredLength = 6;
         $data['code'] = 'INV' . date('Ym') . '-' . str_pad($number + 1, $desiredLength, '0', STR_PAD_LEFT);
         $data['moduleCode'] = $this->moduleCode;
-        $data['opds'] = Opd::pluck('name', 'id')->prepend('Select OPD', '');
+        
+        // Filter OPD berdasarkan user login
+        $user = auth()->user();
+        if ($user->opd_id) {
+            // Jika user memiliki OPD, hanya tampilkan OPD tersebut
+            $data['opds'] = Opd::where('id', $user->opd_id)->pluck('name', 'id');
+        } else {
+            // Jika user tidak memiliki OPD, tampilkan semua OPD
+            $data['opds'] = Opd::pluck('name', 'id')->prepend('Select OPD', '');
+        }
         $data['programs'] = Program::pluck('name', 'code')->prepend('Select Subunit', '');
         $data['categories'] = Category::pluck('name', 'id')->prepend('Select Kategori', '');
         $data['inventory'] = Inventory::pluck('name', 'id')->prepend('Select Aplikasi', '');
@@ -357,7 +380,16 @@ class InventoryController extends Controller
         $data['application'] = Inventory::find($id);
         $data['code'] = 'INV' . date('Ym') . '-' . str_pad($number + 1, $desiredLength, '0', STR_PAD_LEFT);
         $data['moduleCode'] = $this->moduleCode;
-        $data['opds'] = Opd::pluck('name', 'id')->prepend('Select OPD', '');
+        
+        // Filter OPD berdasarkan user login
+        $user = auth()->user();
+        if ($user->opd_id) {
+            // Jika user memiliki OPD, hanya tampilkan OPD tersebut
+            $data['opds'] = Opd::where('id', $user->opd_id)->pluck('name', 'id');
+        } else {
+            // Jika user tidak memiliki OPD, tampilkan semua OPD
+            $data['opds'] = Opd::pluck('name', 'id')->prepend('Select OPD', '');
+        }
         $data['programs'] = Program::pluck('name', 'code')->prepend('Select Subunit', '');
         $data['categories'] = Category::pluck('name', 'id')->prepend('Select Kategori', '');
         $data['inventory'] = Inventory::pluck('name', 'id')->prepend('Select Aplikasi', '');

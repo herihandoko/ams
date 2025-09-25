@@ -30,7 +30,8 @@ class User extends Model implements Authenticatable
         'nik',
         'about_me',
         'gender',
-        'birthdate'
+        'birthdate',
+        'opd_id'
     ];
     protected $connection = 'mysql';
     public $timestamps = false;

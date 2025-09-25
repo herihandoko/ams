@@ -18,8 +18,10 @@ class UsersController extends Controller
     {
         $this->authorize('view', $this->moduleCode);
         $roles = \App\Model\Roles::pluck('name', 'id');
+        $opds = \App\Opd::pluck('name', 'id');
         return view('settings.users.index', [
             'roles' => $roles,
+            'opds' => $opds,
             'moduleCode' => $this->moduleCode
         ]);
     }
@@ -59,6 +61,8 @@ class UsersController extends Controller
     public function store(Request $request, User $user)
     {
         $this->authorize('create', $this->moduleCode);
+        
+        
         $validator = \Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'role_id' => ['required'],
@@ -78,6 +82,7 @@ class UsersController extends Controller
             'email' => $request->email,
             'role_id' => $request->role_id,
             'job_title' => $request->job_title,
+            'opd_id' => $request->opd_id,
             'password' => Hash::make($request->password),
             'status' => 1,
             'avatar' => 'avatar.png',
@@ -116,6 +121,7 @@ class UsersController extends Controller
             'email' => $request->email,
             'role_id' => $request->role_id,
             'job_title' => $request->job_title,
+            'opd_id' => $request->opd_id,
         ];
 
         if ($request->password || $request->password_confirmation) {

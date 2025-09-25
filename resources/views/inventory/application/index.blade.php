@@ -54,16 +54,22 @@
                                     <div class="panel-body">
                                         <form method="GET" action="{{ route('inventory.application.index') }}">
                                             <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="filter_opd">OPD</label>
-                                                        <select class="form-control" id="filter_opd" name="opd_id">
-                                                            @foreach($data['opds'] as $id => $opd)
-                                                                <option value="{{ $id }}" {{ $data['opd_id'] == $id ? 'selected' : '' }}>{{ $opd }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                @if(auth()->user()->opd_id)
+                                                    {{-- Jika user memiliki OPD, sembunyikan filter OPD --}}
+                                                    <input type="hidden" name="opd_id" value="{{ auth()->user()->opd_id }}">
+                                                @else
+                                                    {{-- Jika user tidak memiliki OPD, tampilkan filter OPD --}}
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="filter_opd">OPD</label>
+                                                            <select class="form-control" id="filter_opd" name="opd_id">
+                                                                @foreach($data['opds'] as $id => $opd)
+                                                                    <option value="{{ $id }}" {{ $data['opd_id'] == $id ? 'selected' : '' }}>{{ $opd }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="filter_status">Status</label>

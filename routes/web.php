@@ -60,6 +60,7 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::post('application/store', 'InventoryController@store')->name('inventory.application.store');
         Route::put('application/update', 'InventoryController@update')->name('inventory.application.update');
         Route::delete('application/destroy', 'InventoryController@destroy')->name('inventory.application.destroy');
+        Route::post('application/sync', 'InventoryController@sync')->name('inventory.application.sync');
 
         // Inventory sync routes
         Route::post('sync', [InventorySyncController::class, 'sync'])->name('inventory.sync');
@@ -173,6 +174,7 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::get('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'show'])->name('master.software_platform.show');
         Route::get('software_platform/{softwarePlatform}/edit', [SoftwarePlatformController::class, 'edit'])->name('master.software_platform.edit');
         Route::put('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'update'])->name('master.software_platform.update');
+        Route::post('software_platform/sync', [SoftwarePlatformController::class, 'sync'])->name('master.software_platform.sync');
         Route::delete('software_platform/{softwarePlatform}', [SoftwarePlatformController::class, 'destroy'])->name('master.software_platform.destroy');
         
         // Master Storage Media

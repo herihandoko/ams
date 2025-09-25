@@ -22,6 +22,7 @@ use App\MetadataSpbe;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Artisan;
 use DataTables;
 
 class InventoryController extends Controller
@@ -725,5 +726,35 @@ class InventoryController extends Controller
             "aaData" => $data_arr
         );
         return response()->json($response);
+    }
+
+    /**
+     * Sync inventory data manually
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sync()
+    {
+        try {
+            // Execute the inventory sync command
+            $exitCode = Artisan::call('inventory:sync');
+            
+            if ($exitCode === 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Inventory sync completed successfully!'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Inventory sync failed with exit code: ' . $exitCode
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error during sync: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -119,3 +119,76 @@
     </div>
 </div>
 @endsection
+
+@section('js')
+<script>
+function syncInventory() {
+    const button = document.getElementById('syncButton');
+    const originalText = button.innerHTML;
+    
+    // Disable button and show loading
+    button.disabled = true;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Syncing...';
+    
+    // Show loading alert
+    Swal.fire({
+        title: 'Sync in Progress',
+        text: 'Please wait while we sync the inventory data...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
+    // Make AJAX request to sync
+    fetch('{{ route("master.software_platform.sync") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Hide loading
+        Swal.close();
+        
+        if (data.success) {
+            Swal.fire({
+                title: 'Sync Successful!',
+                text: data.message || 'Inventory data has been synced successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Reload the page to show updated data
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                title: 'Sync Failed!',
+                text: data.message || 'An error occurred during sync.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.close();
+        Swal.fire({
+            title: 'Sync Error!',
+            text: 'An error occurred while syncing. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    })
+    .finally(() => {
+        // Re-enable button
+        button.disabled = false;
+        button.innerHTML = originalText;
+    });
+}
+</script>
+@endsection

@@ -27,6 +27,9 @@
                             <a href="{{ route('inventory.application.create') }}"
                                 class="btn btn-xs btn-icon btn-circle btn-primary btn-action-add"><i class="fa fa-plus"></i></a>
                         @endcan
+                        <button type="button" class="btn btn-xs btn-icon btn-circle btn-info" id="syncButton" onclick="syncInventory()" title="Sync Inventory">
+                            <i class="fa fa-refresh"></i>
+                        </button>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"
                             data-click="panel-reload"><i class="fa fa-repeat"></i></a>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
@@ -308,5 +311,76 @@
                     });
             });
         });
+
+        // Sync Inventory Function
+        function syncInventory() {
+            const button = document.getElementById('syncButton');
+            const originalText = button.innerHTML;
+            
+            // Disable button and show loading
+            button.disabled = true;
+            button.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            
+            // Show loading alert
+            swal({
+                title: "Sync in Progress",
+                text: "Please wait while we sync the inventory data...",
+                type: "info",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                onOpen: function() {
+                    swal.showLoading();
+                }
+            });
+            
+            // Make AJAX request to sync
+            fetch('{{ route("inventory.application.sync") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading
+                swal.close();
+                
+                if (data.success) {
+                    swal({
+                        title: "Sync Successful!",
+                        text: data.message || "Inventory data has been synced successfully.",
+                        type: "success",
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        // Reload the page to show updated data
+                        location.reload();
+                    });
+                } else {
+                    swal({
+                        title: "Sync Failed!",
+                        text: data.message || "An error occurred during sync.",
+                        type: "error",
+                        confirmButtonText: "OK"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                swal.close();
+                swal({
+                    title: "Sync Error!",
+                    text: "An error occurred while syncing. Please try again.",
+                    type: "error",
+                    confirmButtonText: "OK"
+                });
+            })
+            .finally(() => {
+                // Re-enable button
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
     </script>
 @endsection

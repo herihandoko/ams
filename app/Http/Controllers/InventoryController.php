@@ -87,7 +87,7 @@ class InventoryController extends Controller
         }
         
         if ($layananId) {
-            $query->where('id_layanan', $layananId);
+            $query->where('scope', $layananId);
         }
         
         if ($unitPengembang) {
@@ -164,7 +164,7 @@ class InventoryController extends Controller
         }
         
         $data['categories'] = Category::pluck('name', 'id')->prepend('Semua Kategori', '');
-        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Semua Layanan', '');
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'kode_layanan')->prepend('Type Aplikasi', '');
         $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Semua Unit Pengembang', '');
         
         return view('inventory.application.index', compact('data'));
@@ -203,7 +203,7 @@ class InventoryController extends Controller
         $data['status_app'] = StatusAplikasi::pluck('name', 'code');
         
         // Data untuk dropdown baru
-        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'kode_layanan')->prepend('Select Layanan', '');
         $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
         $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
         $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
@@ -380,7 +380,7 @@ class InventoryController extends Controller
         $data['documents'] = Document::select('id', 'inventory', 'url')->where('inventory_id', $id)->get();
         
         // Data untuk dropdown baru
-        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'kode_layanan')->prepend('Select Layanan', '');
         $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
         $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
         $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');
@@ -424,7 +424,7 @@ class InventoryController extends Controller
         $data['services'] = InventoryHasService::where('inventory_id', $id)->get();
         
         // Data untuk dropdown baru
-        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'id')->prepend('Select Layanan', '');
+        $data['layanans'] = Layanan::where('status', 'aktif')->pluck('nama_layanan', 'kode_layanan')->prepend('Select Layanan', '');
         $data['data_metadata'] = DataMetadata::where('status', 'aktif')->pluck('nama_data', 'id')->prepend('Select Data Metadata', '');
         $data['units'] = Unit::where('status', 'aktif')->pluck('nama_unit', 'id')->prepend('Select Unit', '');
         $data['metadata_spbe'] = MetadataSpbe::where('status', 'aktif')->pluck('nama_metadata', 'id')->prepend('Select Metadata SPBE', '');

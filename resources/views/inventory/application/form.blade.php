@@ -49,13 +49,11 @@
             <span style="color:red !important;">{{ $errors->first('user_base') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('scope', 'Tipe Layanan', ['class' => 'control-label']) }}            <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
+            {{ Form::label('scope', 'Tipe Aplikasi', ['class' => 'control-label']) }}
+            <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
             {{ Form::select(
                 'scope',
-                [
-                    'publik' => 'Layanan Publik',
-                    'instansi' => 'Tata Kelola Pemerintah',
-                ],
+                $data['layanans'],
                 isset($application->scope) ? $application->scope : old('scope'),
                 ['class' => $errors->has('scope') ? 'form-control is-invalid' : 'form-control'],
             ) }}

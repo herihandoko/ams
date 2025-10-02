@@ -132,7 +132,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <label for="filter_layanan">Layanan</label>
+                                                        <label for="filter_layanan">Tipe Aplikasi</label>
                                                         <select class="form-control" id="filter_layanan" name="id_layanan">
                                                             @foreach($data['layanans'] as $id => $layanan)
                                                                 <option value="{{ $id }}" {{ $data['id_layanan'] == $id ? 'selected' : '' }}>{{ $layanan }}</option>
@@ -277,7 +277,7 @@
                                     </a>
                                 </th>
                                 <th>Platform</th>
-                                <th>Type Layanan</th>
+                                <th>Type</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>

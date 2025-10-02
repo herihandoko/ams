@@ -49,6 +49,9 @@
                         <button type="button" class="btn btn-xs btn-icon btn-circle btn-info" id="syncButton" onclick="syncInventory()" title="Sync Inventory">
                             <i class="fa fa-refresh"></i>
                         </button>
+                        <a href="{{ route('inventory.application.export', request()->query()) }}" class="btn btn-xs btn-icon btn-circle btn-success" title="Export Excel">
+                            <i class="fa fa-file-excel-o"></i>
+                        </a>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success"
                             data-click="panel-reload"><i class="fa fa-repeat"></i></a>
                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
@@ -313,6 +316,12 @@
                                                class="btn btn-xs btn-icon btn-circle btn-success btn-action-view">
                                                 <i class="fa fa-eye"></i>
                                             </a>
+                                            <a href="{{ route('inventory.application.print', $inventory->id) }}" 
+                                                target="_blank"
+                                                data-toggle="tooltip" data-original-title="Print" 
+                                                class="btn btn-xs btn-icon btn-circle btn-info btn-action-view">
+                                                 <i class="fa fa-print"></i>
+                                             </a>
                                             @can('edit', $data['moduleCode'])
                                                 <a href="{{ route('inventory.application.edit', $inventory->id) }}" 
                                                    data-toggle="tooltip" data-original-title="Edit" 
@@ -480,5 +489,6 @@
             url.searchParams.set('per_page', perPage);
             window.location.href = url.toString();
         }
+
     </script>
 @endsection

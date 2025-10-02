@@ -61,6 +61,8 @@ Route::group(['middleware' => ['user.check', 'auth', 'web']], function () {
         Route::put('application/update', 'InventoryController@update')->name('inventory.application.update');
         Route::delete('application/destroy', 'InventoryController@destroy')->name('inventory.application.destroy');
         Route::post('application/sync', 'InventoryController@sync')->name('inventory.application.sync');
+        Route::get('application/export', 'InventoryController@export')->name('inventory.application.export');
+        Route::get('application/print/{id}', 'InventoryController@print')->name('inventory.application.print');
 
         // Inventory sync routes
         Route::post('sync', [InventorySyncController::class, 'sync'])->name('inventory.sync');

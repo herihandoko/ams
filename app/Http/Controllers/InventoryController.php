@@ -778,4 +778,45 @@ class InventoryController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Export inventory data to Excel
+     */
+    public function export(Request $request)
+    {
+        try {
+            $filters = $request->only([
+                'opd_id', 'status', 'category_id', 'id_layanan', 
+                'unit_pengembang', 'tahun_pembuatan', 'platform', 
+                'type_hosting', 'search'
+            ]);
+
+            $export = new \App\Exports\InventoryExport($filters);
+            
+            $filename = 'inventory_export_' . date('Y-m-d_H-i-s') . '.xlsx';
+            
+            return \Maatwebsite\Excel\Facades\Excel::download($export, $filename);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Export failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Print inventory data
+     */
+    public function print($id)
+    {
+        $inventory = Inventory::with([
+            'opd', 
+            'category', 
+            'statusapp', 
+            'server', 
+            'layanan',
+            'dataMetadata',
+            'unitPengembang',
+            'unitOperasional'
+        ])->findOrFail($id);
+
+        return view('inventory.application.print', compact('inventory'));
+    }
 }

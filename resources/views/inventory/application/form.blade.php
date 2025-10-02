@@ -53,7 +53,12 @@
             <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
             {{ Form::select(
                 'scope',
-                $data['layanans'],
+                [
+                    "Aplikasi" => "Aplikasi",
+                    "Website" => "Website",
+                    "Tools" => "Tools",
+                    "Belum Diketahui" => "Belum Diketahui",
+                ],
                 isset($application->scope) ? $application->scope : old('scope'),
                 ['class' => $errors->has('scope') ? 'form-control is-invalid' : 'form-control'],
             ) }}

@@ -89,6 +89,8 @@ class InventorySyncService
     {
         $domain = $apiRecord['Domain'] ?? '';
         $status = $apiRecord['Status'] ?? '';
+        $type = $apiRecord['Type'] ?? '';
+        $desc = $apiRecord['Desc'] ?? '';
         
         $updates = [];
         
@@ -102,6 +104,16 @@ class InventorySyncService
         // Update URL if it doesn't match the domain
         if (!empty($domain) && !str_contains($inventory->url, $domain)) {
             $updates['url'] = $domain;
+        }
+        
+        // Update scope (Type) from API
+        if (!empty($type)) {
+            $updates['scope'] = $type;
+        }
+        
+        // Update keterangan (Desc) from API
+        if (!empty($desc)) {
+            $updates['keterangan'] = $desc;
         }
         
         if (!empty($updates)) {
@@ -195,8 +207,10 @@ class InventorySyncService
         $domain = $apiRecord['Domain'] ?? '';
         $ipAddress = $apiRecord['IpAddress'] ?? '';
         $status = $apiRecord['Status'] ?? '';
+        $type = $apiRecord['Type'] ?? '';
+        $desc = $apiRecord['Desc'] ?? '';
         
-        Log::info("Attempting to create new inventory record for domain: {$domain}, IP: {$ipAddress}");
+        Log::info("Attempting to create new inventory record for domain: {$domain}, IP: {$ipAddress}, Type: {$type}, Desc: {$desc}");
         
         try {
             // First, check if server exists with this IP, if not create it
@@ -209,8 +223,8 @@ class InventorySyncService
                 'name' => $domain,
                 'version' => '1.0',
                 'user_base' => 'N/A',
-                'scope' => 'external',
-                'keterangan' => 'Auto-created from API sync',
+                'scope' => !empty($type) ? $type : 'external',
+                'keterangan' => !empty($desc) ? $desc : 'Auto-created from API sync',
                 'opd_id' => '1', // Default OPD ID
                 'category_id' => 1, // Default category ID
                 'url' => $domain,

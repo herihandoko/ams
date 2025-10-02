@@ -24,17 +24,17 @@ class StoreInventoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
-            'code' => 'required|unique:inventories,code|max:100',
-            'version' => 'required',
-            'url' => 'required',
-            'category' => 'required',
-            'status' => 'required',
-            'manufacturer' => 'required',
-            'tahun_anggaran' => 'required|date_format:Y',
-            'opd_id' => 'required',
-            'sub_unit' => 'required',
-            'ip_address' => 'ip'
+            'name' => 'max:255',
+            'code' => 'unique:inventories,code|max:100',
+            'version' => '',
+            'url' => '',
+            'category' => '',
+            'status' => '',
+            'manufacturer' => '',
+            'tahun_anggaran' => 'date_format:Y',
+            'opd_id' => '',
+            'sub_unit' => '',
+            'ip_address' => ''
         ];
     }
 }

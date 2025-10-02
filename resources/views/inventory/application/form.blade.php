@@ -1,7 +1,7 @@
 <h4>Detail Aplikasi</h4>
 <p>
     Anda dapat memeriksa semua informasi aplikasi Anda di bawah.<br>
-    <span class="text-danger">* Silakan isi kolom yang wajib diisi.</span>
+    <span class="text-muted">Silakan isi kolom sesuai kebutuhan.</span>
 </p>
 <div class="row">
     <div class="col-md-6">
@@ -12,8 +12,7 @@
             <span style="color:red !important;">{{ $errors->first('code') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('name', 'Nama Aplikasi', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::text('name', isset($application->name) ? $application->name : old('name'), ['class' => $errors->has('name') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('name', 'Nama Aplikasi', ['class' => 'control-label']) }}            {{ Form::text('name', isset($application->name) ? $application->name : old('name'), ['class' => $errors->has('name') ? 'form-control is-invalid' : 'form-control']) }}
             <small class="text-muted">Nama aplikasi yang digunakan atau dimiliki</small>
             <span style="color:red !important;">{{ $errors->first('name') }}</span>
         </div>
@@ -28,15 +27,12 @@
             <span style="color:red !important;">{{ $errors->first('description') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('version', 'Versi', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::text('version', isset($application->version) ? $application->version : old('version'), ['class' => $errors->has('version') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('version', 'Versi', ['class' => 'control-label']) }}            {{ Form::text('version', isset($application->version) ? $application->version : old('version'), ['class' => $errors->has('version') ? 'form-control is-invalid' : 'form-control']) }}
             <small class="text-muted">Versi aplikasi yang sedang digunakan</small>
             <span style="color:red !important;">{{ $errors->first('version') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('user_base', 'Basis pengguna', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('user_base', 'Basis pengguna', ['class' => 'control-label']) }}            {{ Form::select(
                 'user_base',
                 [
                     '1-10' => '1-10',
@@ -53,8 +49,7 @@
             <span style="color:red !important;">{{ $errors->first('user_base') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('scope', 'Tipe Layanan', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
+            {{ Form::label('scope', 'Tipe Layanan', ['class' => 'control-label']) }}            <small class="text-muted">Jenis layanan yang disediakan aplikasi</small>
             {{ Form::select(
                 'scope',
                 [
@@ -89,14 +84,11 @@
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            {{ Form::label('url', 'Domain/Package/URL/DNS', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::text('url', isset($application->url) ? $application->url : old('url'), ['class' => $errors->has('url') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('url', 'Domain/Package/URL/DNS', ['class' => 'control-label']) }}            {{ Form::text('url', isset($application->url) ? $application->url : old('url'), ['class' => $errors->has('url') ? 'form-control is-invalid' : 'form-control']) }}
             <span style="color:red !important;">{{ $errors->first('url') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('category', 'Kategori', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('category', 'Kategori', ['class' => 'control-label']) }}            {{ Form::select(
                 'category',
                 $data['categories'],
                 isset($application->category_id) ? $application->category_id : old('category'),
@@ -105,9 +97,7 @@
             <span style="color:red !important;">{{ $errors->first('category') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('status', 'Status Aplikasi', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('status', 'Status Aplikasi', ['class' => 'control-label']) }}            {{ Form::select(
                 'status',
                 $data['status_app'],
                 isset($application->status) ? $application->status : old('status'),
@@ -116,8 +106,7 @@
             <span style="color:red !important;">{{ $errors->first('status') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('platform', 'Platform/Jenis', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('platform', 'Platform/Jenis', ['class' => 'control-label']) }}            {{ Form::select(
                 'platform',
                 [
                     'web' => 'Web',
@@ -315,19 +304,16 @@
         <h4>Informasi Teknis</h4>
         <p>
             Info mengenai aspek teknis aplikasi Anda ditunjukkan di bawah ini.<br>
-            <span class="text-danger">* Silakan isi kolom yang wajib diisi.</span>
+            <span class="text-muted">Silakan isi kolom sesuai kebutuhan.</span>
         </p>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('manufacturer', 'Manufacturer', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-                    {{ Form::text('manufacturer', isset($application->manufacturer) ? $application->manufacturer : old('manufacturer'), ['class' => $errors->has('manufacturer') ? 'form-control is-invalid' : 'form-control']) }}
+                    {{ Form::label('manufacturer', 'Manufacturer', ['class' => 'control-label']) }}                    {{ Form::text('manufacturer', isset($application->manufacturer) ? $application->manufacturer : old('manufacturer'), ['class' => $errors->has('manufacturer') ? 'form-control is-invalid' : 'form-control']) }}
                     <span style="color:red !important;">{{ $errors->first('manufacturer') }}</span>
                 </div>
                 <div class="form-group">
-                    {{ Form::label('type_hosting', 'Lokasi Server', ['class' => 'control-label']) }} <span
-                        class="text-danger">*</span>
-                    {{ Form::select(
+                    {{ Form::label('type_hosting', 'Lokasi Server', ['class' => 'control-label']) }}                    {{ Form::select(
                         'type_hosting',
                         [
                             'on_prem' => 'On-prem',
@@ -354,16 +340,13 @@
                     <span style="color:red !important;">{{ $errors->first('server_id') }}</span>
                 </div>
                 <div class="form-group">
-                    {{ Form::label('ip_address', 'IP Address', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-                    {{ Form::text('ip_address', isset($application->ip_address) ? $application->ip_address : old('ip_address'), ['class' => $errors->has('ip_address') ? 'form-control is-invalid' : 'form-control','placeholder'=> '0:0:0:0']) }}
+                    {{ Form::label('ip_address', 'IP Address', ['class' => 'control-label']) }}                    {{ Form::text('ip_address', isset($application->ip_address) ? $application->ip_address : old('ip_address'), ['class' => $errors->has('ip_address') ? 'form-control is-invalid' : 'form-control','placeholder'=> '0:0:0:0']) }}
                     <span style="color:red !important;">{{ $errors->first('ip_address') }}</span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            {{ Form::label('repository', 'Repository (Github,Bitbucket dsb)', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::text('repository', isset($application->repository) ? $application->repository : old('repository'), ['class' => $errors->has('repository') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('repository', 'Repository (Github,Bitbucket dsb)', ['class' => 'control-label']) }}            {{ Form::text('repository', isset($application->repository) ? $application->repository : old('repository'), ['class' => $errors->has('repository') ? 'form-control is-invalid' : 'form-control']) }}
             <span style="color:red !important;">{{ $errors->first('repository') }}</span>
         </div>
     </div>
@@ -371,7 +354,7 @@
         <h4>Informasi Teknis</h4>
         <p>
             Info mengenai aspek teknis aplikasi Anda ditunjukkan di bawah ini.<br>
-            <span class="text-danger">* Silakan isi kolom yang wajib diisi.</span>
+            <span class="text-muted">Silakan isi kolom sesuai kebutuhan.</span>
         </p>
         <div class="form-group">
             {{ Form::label('predecessor_app', 'Aplikasi Sebelumnya', ['class' => 'control-label']) }}
@@ -395,8 +378,7 @@
             <span style="color:red !important;">{{ $errors->first('database') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('language', 'Bahasa Pemrograman', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            <small class="text-muted">Bahasa pemrograman yang digunakan oleh aplikasi</small>
+            {{ Form::label('language', 'Bahasa Pemrograman', ['class' => 'control-label']) }}            <small class="text-muted">Bahasa pemrograman yang digunakan oleh aplikasi</small>
             {{ Form::select('language[]',$data['languages'],isset($data['language']) ? $data['language'] : old('language'), ['class' => $errors->has('language') ? 'form-control is-invalid' : 'form-control','id'=>'bahasa-pemrograman','multiple'=>true]) }}
             <span style="color:red !important;">{{ $errors->first('url') }}</span>
         </div>
@@ -491,13 +473,12 @@
 <h4>Detail Pemilik</h4>
 <p>
     Anda dapat menemukan informasi tentang orang-orang yang relevan dengan aplikasi Anda di sini.<br>
-    <span class="text-danger">* Silakan isi kolom yang wajib diisi.</span>
+    <span class="text-muted">Silakan isi kolom sesuai kebutuhan.</span>
 </p>
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            {{ Form::label('opd_id', 'OPD', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('opd_id', 'OPD', ['class' => 'control-label']) }}            {{ Form::select(
                 'opd_id',
                 $data['opds'],
                 isset($application->opd_id) ? $application->opd_id : old('opd_id'),
@@ -508,8 +489,7 @@
             <span style="color:red !important;">{{ $errors->first('opd_id') }} </span>
         </div>
         <div class="form-group">
-            {{ Form::label('sub_unit', 'Sub Unit', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('sub_unit', 'Sub Unit', ['class' => 'control-label']) }}            {{ Form::select(
                 'sub_unit',
                 $data['programs'],
                 isset($application->sub_unit) ? $application->sub_unit : old('sub_unit'),
@@ -520,8 +500,7 @@
             <span style="color:red !important;">{{ $errors->first('sub_unit') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('sumber_dana', 'Sumber Dana', ['class' => 'control-label']) }} <span class="text-danger">*</span>
-            {{ Form::select(
+            {{ Form::label('sumber_dana', 'Sumber Dana', ['class' => 'control-label']) }}            {{ Form::select(
                 'sumber_dana',
                 [
                     'apbd' => 'APBD',
@@ -537,15 +516,11 @@
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            {{ Form::label('tahun_pembuatan', 'Tahun Pembangunan', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::number('tahun_pembuatan', isset($application->tahun_pembuatan) ? $application->tahun_pembuatan : old('tahun_pembuatan'), ['class' => $errors->has('tahun_pembuatan') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('tahun_pembuatan', 'Tahun Pembangunan', ['class' => 'control-label']) }}            {{ Form::number('tahun_pembuatan', isset($application->tahun_pembuatan) ? $application->tahun_pembuatan : old('tahun_pembuatan'), ['class' => $errors->has('tahun_pembuatan') ? 'form-control is-invalid' : 'form-control']) }}
             <span style="color:red !important;">{{ $errors->first('tahun_pembuatan') }}</span>
         </div>
         <div class="form-group">
-            {{ Form::label('tahun_anggaran', 'Tahun Anggaran/Tahun Pembangunan', ['class' => 'control-label']) }} <span
-                class="text-danger">*</span>
-            {{ Form::number('tahun_anggaran', isset($application->tahun_anggaran) ? $application->tahun_anggaran : old('tahun_anggaran'), ['class' => $errors->has('tahun_anggaran') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::label('tahun_anggaran', 'Tahun Anggaran/Tahun Pembangunan', ['class' => 'control-label']) }}            {{ Form::number('tahun_anggaran', isset($application->tahun_anggaran) ? $application->tahun_anggaran : old('tahun_anggaran'), ['class' => $errors->has('tahun_anggaran') ? 'form-control is-invalid' : 'form-control']) }}
             <span style="color:red !important;">{{ $errors->first('tahun_anggaran') }}</span>
         </div>
         <div class="form-group">

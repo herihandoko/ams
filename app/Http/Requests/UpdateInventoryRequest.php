@@ -26,18 +26,18 @@ class UpdateInventoryRequest extends FormRequest
     {
         return [
             //
-            'id' => 'required',
-            'name' => 'required|max:255',
-            'code' => 'required|max:100|unique:inventories,code,' . $request->id,
-            'version' => 'required',
-            'url' => 'required',
-            'category' => 'required',
-            'status' => 'required',
-            'manufacturer' => 'required',
-            'tahun_anggaran' => 'required|date_format:Y',
-            'opd_id' => 'required',
-            'sub_unit' => 'required',
-            'ip_address' => 'ip'
+            'id' => '',
+            'name' => 'max:255',
+            'code' => 'max:100|unique:inventories,code,' . $request->id,
+            'version' => '',
+            'url' => '',
+            'category' => '',
+            'status' => '',
+            'manufacturer' => '',
+            'tahun_anggaran' => 'date_format:Y',
+            'opd_id' => '',
+            'sub_unit' => '',
+            'ip_address' => ''
         ];
     }
 }

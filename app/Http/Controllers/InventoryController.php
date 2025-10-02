@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Gate;
 use DataTables;
 
 class InventoryController extends Controller
@@ -52,6 +53,9 @@ class InventoryController extends Controller
         $platform = $request->get('platform');
         $typeHosting = $request->get('type_hosting');
         $search = $request->get('search');
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $perPage = $request->get('per_page', 15);
         
         // Build query - default hanya tampilkan status active
         $query = Inventory::with('category', 'opd', 'statusapp', 'layanan', 'unitPengembang')
@@ -117,8 +121,22 @@ class InventoryController extends Controller
             });
         }
         
+        // Apply sorting
+        $allowedSortFields = ['id', 'name', 'tahun_pembuatan', 'url', 'ip_address', 'created_at', 'updated_at'];
+        if (in_array($sortBy, $allowedSortFields)) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        // Validate per_page value
+        $allowedPerPage = [10, 20, 50, 100, 150, 200];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 15;
+        }
+        
         // Get paginated results
-        $inventories = $query->orderBy('created_at', 'desc')->paginate(15);
+        $inventories = $query->paginate($perPage);
         
         // Prepare data for view
         $data['moduleCode'] = $this->moduleCode;
@@ -132,6 +150,9 @@ class InventoryController extends Controller
         $data['platform'] = $platform;
         $data['type_hosting'] = $typeHosting;
         $data['search'] = $search;
+        $data['sort_by'] = $sortBy;
+        $data['sort_order'] = $sortOrder;
+        $data['per_page'] = $perPage;
         
         // Data untuk dropdown
         if ($user->opd_id) {
@@ -689,10 +710,10 @@ class InventoryController extends Controller
             }
 
             $btn = '<a href="' . route('inventory.application.show', $record->id) . '" data-toggle="tooltip" data-original-title="View" class="btn btn-xs btn-icon btn-circle btn-success btn-action-view"><i class="fa fa-eye"></i></a> ';
-            if ($user->can('edit', $this->moduleCode) == 1) {
+            if (Gate::allows('edit', $this->moduleCode)) {
                 $btn .= '<a href="' . route('inventory.application.edit', $record->id) . '" data-toggle="tooltip" data-original-title="Edit" class="btn btn-xs btn-icon btn-circle btn-warning btn-action-edit"><i class="fa fa-pencil"></i></a> ';
             }
-            if ($user->can('delete', $this->moduleCode) == 1) {
+            if (Gate::allows('delete', $this->moduleCode)) {
                 $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $record->id . '" data-original-title="Delete" class="btn btn-xs btn-icon btn-circle btn-danger btn-action-delete"><i class="fa fa-trash"></i></a>';
             }
 

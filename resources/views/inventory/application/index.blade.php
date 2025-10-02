@@ -13,6 +13,25 @@
     <!-- end page-header -->
 @endsection
 @section('content')
+    <style>
+        .sort-link {
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+        .sort-link:hover {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .sort-link.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .sort-link i {
+            margin-left: 5px;
+        }
+    </style>
     <!-- begin row -->
     <div class="row">
         <!-- begin col-12 -->
@@ -41,6 +60,25 @@
                 </div>
                 <div class="panel-body">
                     @include('master.message')
+                    
+                    <!-- Per Page Selection -->
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <div class="form-group" style="margin-bottom: 0; display: inline-block;">
+                                    <label for="per_page" class="control-label" style="margin-right: 10px;">Per Page:</label>
+                                    <select class="form-control" id="per_page" name="per_page" style="width: auto; display: inline-block;" onchange="changePerPage()">
+                                        <option value="10" {{ $data['per_page'] == 10 ? 'selected' : '' }}>10</option>
+                                        <option value="20" {{ $data['per_page'] == 20 ? 'selected' : '' }}>20</option>
+                                        <option value="50" {{ $data['per_page'] == 50 ? 'selected' : '' }}>50</option>
+                                        <option value="100" {{ $data['per_page'] == 100 ? 'selected' : '' }}>100</option>
+                                        <option value="150" {{ $data['per_page'] == 150 ? 'selected' : '' }}>150</option>
+                                        <option value="200" {{ $data['per_page'] == 200 ? 'selected' : '' }}>200</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Filter Section -->
                     <div class="row" style="margin-bottom: 20px;">
@@ -182,12 +220,63 @@
                         <thead>
                             <tr>
                                 <th width="32">#</th>
-                                <th>ID</th>
-                                <th>Nama Aplikasi</th>
-                                <th>Tahun</th>
-                                <th>DNS</th>
+                                <th>
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'id', 'sort_order' => $data['sort_by'] == 'id' && $data['sort_order'] == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="sort-link {{ $data['sort_by'] == 'id' ? 'active' : '' }}">
+                                        ID
+                                        @if($data['sort_by'] == 'id')
+                                            <i class="fa fa-sort-{{ $data['sort_order'] == 'asc' ? 'asc' : 'desc' }}"></i>
+                                        @else
+                                            <i class="fa fa-sort text-muted"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'name', 'sort_order' => $data['sort_by'] == 'name' && $data['sort_order'] == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="sort-link {{ $data['sort_by'] == 'name' ? 'active' : '' }}">
+                                        Nama Aplikasi
+                                        @if($data['sort_by'] == 'name')
+                                            <i class="fa fa-sort-{{ $data['sort_order'] == 'asc' ? 'asc' : 'desc' }}"></i>
+                                        @else
+                                            <i class="fa fa-sort text-muted"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'tahun_pembuatan', 'sort_order' => $data['sort_by'] == 'tahun_pembuatan' && $data['sort_order'] == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="sort-link {{ $data['sort_by'] == 'tahun_pembuatan' ? 'active' : '' }}">
+                                        Tahun
+                                        @if($data['sort_by'] == 'tahun_pembuatan')
+                                            <i class="fa fa-sort-{{ $data['sort_order'] == 'asc' ? 'asc' : 'desc' }}"></i>
+                                        @else
+                                            <i class="fa fa-sort text-muted"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'url', 'sort_order' => $data['sort_by'] == 'url' && $data['sort_order'] == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="sort-link {{ $data['sort_by'] == 'url' ? 'active' : '' }}">
+                                        DNS
+                                        @if($data['sort_by'] == 'url')
+                                            <i class="fa fa-sort-{{ $data['sort_order'] == 'asc' ? 'asc' : 'desc' }}"></i>
+                                        @else
+                                            <i class="fa fa-sort text-muted"></i>
+                                        @endif
+                                    </a>
+                                </th>
                                 <th>OPD</th>
-                                <th>IP</th>
+                                <th>
+                                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'ip_address', 'sort_order' => $data['sort_by'] == 'ip_address' && $data['sort_order'] == 'asc' ? 'desc' : 'asc']) }}" 
+                                       class="sort-link {{ $data['sort_by'] == 'ip_address' ? 'active' : '' }}">
+                                        IP
+                                        @if($data['sort_by'] == 'ip_address')
+                                            <i class="fa fa-sort-{{ $data['sort_order'] == 'asc' ? 'asc' : 'desc' }}"></i>
+                                        @else
+                                            <i class="fa fa-sort text-muted"></i>
+                                        @endif
+                                    </a>
+                                </th>
+                                <th>Platform</th>
                                 <th>Type Layanan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -215,6 +304,7 @@
                                         </td>
                                         <td>{{ $inventory->opd->name ?? '-' }}</td>
                                         <td>{{ $inventory->ip_address ?? '-' }}</td>
+                                        <td>{{ $inventory->platform ?? '-' }}</td>
                                         <td>{{ $inventory->scope ?? '-' }}</td>
                                         <td>{{ $inventory->statusapp->name ?? '-' }}</td>
                                         <td>
@@ -241,7 +331,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="10" class="text-center">Tidak ada data ditemukan</td>
+                                        <td colspan="11" class="text-center">Tidak ada data ditemukan</td>
                                     </tr>
                                 @endforelse
                         </tbody>
@@ -381,6 +471,14 @@
                 button.disabled = false;
                 button.innerHTML = originalText;
             });
+        }
+
+        // Change Per Page Function
+        function changePerPage() {
+            const perPage = document.getElementById('per_page').value;
+            const url = new URL(window.location);
+            url.searchParams.set('per_page', perPage);
+            window.location.href = url.toString();
         }
     </script>
 @endsection
